@@ -1,34 +1,27 @@
 #!/usr/bin/python3
-"""A script to determine Pascal's triangle for any number"""
+"""A script to determine Pascal's triangle using recursion"""
 
 def pascal_triangle(n):
     """
     Returns a list of lists of integers representing Pascal’s triangle of n
     """
-    triangle = []  # Initialize the triangle as an empty list
-
-    # Return an empty list if n is less than or equal to 0
     if n <= 0:
-        return triangle
+        return []
 
-    # Loop through each level (row) of the triangle
-    for row_number in range(n):
-        current_row = []  # Initialize the current row
+    # Recursive function to generate a single row in Pascal's triangle
+    def generate_row(previous_row):
+        row_length = len(previous_row) + 1
+        new_row = [1] * row_length  # Initialize row with 1s
+        for i in range(1, row_length - 1):
+            new_row[i] = previous_row[i - 1] + previous_row[i]  # Fill inner values
+        return new_row
 
-        # Loop through each element (column) in the current row
-        for col_number in range(row_number + 1):
-            # The first and last elements of each row are always 1
-            if col_number == 0 or col_number == row_number:
-                current_row.append(1)
-            else:
-                # Compute the inner values by adding elements from the previous row
-                current_row.append(
-                    triangle[row_number - 1][col_number - 1] + 
-                    triangle[row_number - 1][col_number]
-                )
+    # Base case: the first row is always [1]
+    triangle = [[1]]
 
-        # Append the current row to the triangle
-        triangle.append(current_row)
+    # Generate each row recursively
+    for i in range(1, n):
+        next_row = generate_row(triangle[i - 1])  # Generate next row from previous
+        triangle.append(next_row)
 
-    # Return the final triangle
     return triangle

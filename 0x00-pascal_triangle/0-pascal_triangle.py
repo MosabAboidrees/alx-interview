@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """A script to determine Pascal's triangle using recursion"""
 
+
 def pascal_triangle(n):
     """
     Returns a list of lists of integers representing Pascal’s triangle of n
@@ -13,7 +14,8 @@ def pascal_triangle(n):
         row_length = len(previous_row) + 1
         new_row = [1] * row_length  # Initialize row with 1s
         for i in range(1, row_length - 1):
-            new_row[i] = previous_row[i - 1] + previous_row[i]  # Fill inner values
+            # Fill inner values
+            new_row[i] = previous_row[i - 1] + previous_row[i]
         return new_row
 
     # Base case: the first row is always [1]
@@ -21,7 +23,8 @@ def pascal_triangle(n):
 
     # Generate each row recursively
     for i in range(1, n):
-        next_row = generate_row(triangle[i - 1])  # Generate next row from previous
+        # Generate next row from previous
+        next_row = generate_row(triangle[i - 1])
         triangle.append(next_row)
 
     return triangle

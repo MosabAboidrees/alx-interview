@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 # This script reads lines from standard input (stdin) and computes
 # metrics based on the input format. The input format is expected to be:
-# <IP Address> - [<date>] "GET /projects/260 HTTP/1.1" <status code> <file size>
+# <IP Address> - [<date>] "GET /projects/260 HTTP/1.1"
+# <status code> <file size>
 # The script skips lines that do not match this format.
 # After every 10 lines or upon receiving a keyboard interrupt (CTRL + C),
 # it prints the number of lines by status code.
@@ -16,6 +17,7 @@ def print_msg(codes, file_size):
     for key, val in sorted(codes.items()):
         if val != 0:
             print("{}: {}".format(key, val))
+
 
 # Initialize variables
 file_size = 0

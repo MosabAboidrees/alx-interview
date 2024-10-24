@@ -10,6 +10,8 @@
 # If the status code is not an integer, it is not printed.
 # The status codes are printed in ascending order.
 
+import sys
+
 
 # Function to print the metrics
 def print_msg(codes, file_size):

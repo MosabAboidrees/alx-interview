@@ -21,7 +21,8 @@ if __name__ == '__main__':
     total_file_size, line_count = 0, 0
 
     # Define valid HTTP status codes to track
-    valid_status_codes = ["200", "301", "400", "401", "403", "404", "405", "500"]
+    valid_status_codes =
+    ["200", "301", "400", "401", "403", "404", "405", "500"]
     # Initialize status code counts to zero
     statistics = {code: 0 for code in valid_status_codes}
 
@@ -55,4 +56,3 @@ if __name__ == '__main__':
         # Print stats when interrupted
         print_stats(statistics, total_file_size)
         raise
-

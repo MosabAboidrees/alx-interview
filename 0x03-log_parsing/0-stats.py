@@ -1,14 +1,7 @@
 #!/usr/bin/python3
-# This script reads lines from standard input (stdin) and computes
-# metrics based on the input format. The input format is expected to be:
-# <IP Address> - [<date>] "GET /projects/260 HTTP/1.1"
-# <status code> <file size>
-# The script skips lines that do not match this format.
-# After every 10 lines or upon receiving a keyboard interrupt (CTRL + C),
-# it prints the number of lines by status code.
-# The possible status codes are: 200, 301, 400, 401, 403, 404, 405, and 500.
-# If the status code is not an integer, it is not printed.
-# The status codes are printed in ascending order.
+"""
+Log Parsing Script
+"""
 
 import sys
 

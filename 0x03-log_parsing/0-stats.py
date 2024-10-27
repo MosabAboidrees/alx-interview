@@ -13,56 +13,53 @@
 import sys
 
 
-# Function to print the metrics
-def print_msg(codes, file_size):
-    print("File size: {}".format(file_size))
-    for key, val in sorted(codes.items()):
-        if val != 0:
-            print("{}: {}".format(key, val))
+def print_stats(statistics: dict, total_file_size: int) -> None:
+    """Prints the statistics of HTTP status codes and total file size."""
+    # Print total file size
+    print("File size: {:d}".format(total_file_size))
+    # Print each status code count if it has a non-zero value
+    for code, count in sorted(statistics.items()):
+        if count:
+            print("{}: {}".format(code, count))
 
 
-# Initialize variables
-file_size = 0
-code = 0
-count_lines = 0
+if __name__ == '__main__':
+    # Initialize total file size and line count
+    total_file_size, line_count = 0, 0
 
-# Dictionary to store the count of each status code
-codes = {
-    "200": 0,
-    "301": 0,
-    "400": 0,
-    "401": 0,
-    "403": 0,
-    "404": 0,
-    "405": 0,
-    "500": 0
-}
+    # Define valid HTTP status codes to track
+    valid_status_codes = ["200", "301", "400", "401", "403", "404", "405", "500"]
+    # Initialize status code counts to zero
+    statistics = {code: 0 for code in valid_status_codes}
 
-try:
-    # Read lines from standard input
-    for line in sys.stdin:
-        parsed_line = line.split()
-        parsed_line = parsed_line[::-1]
+    try:
+        # Read each line from standard input
+        for line in sys.stdin:
+            line_count += 1  # Increment line count
+            # Split the line into components based on whitespace
+            data = line.split()
+            try:
+                # Extract the status code (second-to-last item in the line)
+                status_code = data[-2]
+                # If the status code is one we track, increment its count
+                if status_code in statistics:
+                    statistics[status_code] += 1
+            except IndexError:
+                # Skip lines that do not have enough data
+                pass
+            try:
+                # Add the file size (last item in the line) to the total
+                total_file_size += int(data[-1])
+            except (IndexError, ValueError):
+                # Skip lines that do not have a valid file size
+                pass
+            # Print stats every 10 lines
+            if line_count % 10 == 0:
+                print_stats(statistics, total_file_size)
+        # Print final stats after processing all lines
+        print_stats(statistics, total_file_size)
+    except KeyboardInterrupt:
+        # Print stats when interrupted
+        print_stats(statistics, total_file_size)
+        raise
 
-        # Check if the line has more than 2 elements
-        if len(parsed_line) > 2:
-            count_lines += 1
-
-            # Process the first 10 lines
-            if count_lines <= 10:
-                file_size += int(parsed_line[0])
-                code = parsed_line[1]
-
-                # Increment the count for the status code
-                # if it is in the dictionary
-                if (code in codes.keys()):
-                    codes[code] += 1
-
-            # Print the metrics after every 10 lines
-            if (count_lines == 10):
-                print_msg(codes, file_size)
-                count_lines = 0
-
-finally:
-    # Print the metrics when the script is interrupted
-    print_msg(codes, file_size)

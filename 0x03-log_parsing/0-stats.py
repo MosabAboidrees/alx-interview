@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Log Parsing Script"""
+"""Log parsing script"""
 
 import sys
 

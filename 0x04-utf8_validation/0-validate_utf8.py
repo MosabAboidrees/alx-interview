@@ -36,7 +36,8 @@ def validUTF8(data):
             if num_bytes == 1 or num_bytes > 4:
                 return False
         else:
-            # For multibyte characters, check that the next byte starts with '10'
+            # For multibyte characters,
+            # check that the next byte starts with '10'
             if not (byte & mask1 and not (byte & mask2)):
                 return False
 

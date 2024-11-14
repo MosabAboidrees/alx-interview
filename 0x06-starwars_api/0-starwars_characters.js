@@ -1,31 +1,41 @@
 #!/usr/bin/node
-
+// Importing the request module
 const request = require('request');
 
+// Movie ID from command line arguments
 const movieId = process.argv[2];
-const movieEndpoint = 'https://swapi-api.alx-tools.com/api/films/' + movieId;
 
-function sendRequest (characterList, index) {
-  if (characterList.length === index) {
+// Construct the URL for the specific movie
+const url = `https://swapi-api.hbtn.io/api/films/${movieId}/`;
+
+// Fetch the movie data
+request(url, (err, res, body) => {
+  if (err) {
+    console.error(err);
     return;
   }
 
-  request(characterList[index], (error, response, body) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log(JSON.parse(body).name);
-      sendRequest(characterList, index + 1);
+  // Parse the response body to JSON
+  const data = JSON.parse(body);
+
+  // Loop over each character URL in the "characters" array
+  const characters = data.characters;
+
+  // Function to print character names in the order provided
+  const printCharacters = async () => {
+    for (const character of characters) {
+      await new Promise((resolve) => {
+        request(character, (err, res, body) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          console.log(JSON.parse(body).name);
+          resolve();
+        });
+      });
     }
-  });
-}
+  };
 
-request(movieEndpoint, (error, response, body) => {
-  if (error) {
-    console.log(error);
-  } else {
-    const characterList = JSON.parse(body).characters;
-
-    sendRequest(characterList, 0);
-  }
+  printCharacters();
 });

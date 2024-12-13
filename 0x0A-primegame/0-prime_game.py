@@ -1,39 +1,47 @@
 #!/usr/bin/python3
+"""Prime game module.
+"""
+
+
 def isWinner(x, nums):
-    """Determines the winner of each game of Prime Game"""
+    """Determines the winner of a prime game session with `x` rounds.
+    Args:
+        x (int): The number of rounds.
+        nums (list): List of integers representing the upper limit
+        of numbers for each round.
+    Returns:
+        str: The name of the player with the most wins ('Maria' or 'Ben').
+        If the number of wins is the same, returns None.
+    """
     if x < 1 or not nums:
+        # If there are no rounds or nums is empty, return None
         return None
 
-    # Function to generate prime numbers up to the maximum number in nums
-    def sieve_of_eratosthenes(n):
-        primes = [True] * (n + 1)
-        primes[0] = primes[1] = False
-        for i in range(2, int(n**0.5) + 1):
-            if primes[i]:
-                for j in range(i * i, n + 1, i):
-                    primes[j] = False
-        return primes
+    # Initialize win counters for Maria and Ben
+    marias_wins, bens_wins = 0, 0
+    # Generate primes up to the maximum number in nums
+    n = max(nums)
+    # Initialize a list to track prime numbers
+    primes = [True for _ in range(1, n + 1, 1)]
+    primes[0] = False  # 1 is not a prime number
 
-    max_num = max(nums)
-    primes = sieve_of_eratosthenes(max_num)
-    prime_count = [0] * (max_num + 1)
+    # Sieve of Eratosthenes to find all prime numbers up to n
+    for i, is_prime in enumerate(primes, 1):
+        if i == 1 or not is_prime:
+            continue
+        for j in range(i + i, n + 1, i):
+            primes[j - 1] = False  # Mark multiples of i as non-prime
 
-    # Precompute the count of primes up to each number
-    for i in range(1, max_num + 1):
-        prime_count[i] = prime_count[i - 1] + (1 if primes[i] else 0)
+    # Determine the winner for each round
+    for _, n in zip(range(x), nums):
+        # Count the number of primes less than or equal to n
+        primes_count = len(list(filter(lambda x: x, primes[0: n])))
 
-    maria_wins = 0
-    ben_wins = 0
+        # Update win counters based on the number of primes
+        bens_wins += primes_count % 2 == 0
+        marias_wins += primes_count % 2 == 1
 
-    for n in nums:
-        if prime_count[n] % 2 == 1:
-            maria_wins += 1
-        else:
-            ben_wins += 1
-
-    if maria_wins > ben_wins:
-        return "Maria"
-    elif ben_wins > maria_wins:
-        return "Ben"
-    else:
+    # Determine the overall winner
+    if marias_wins == bens_wins:
         return None
+    return 'Maria' if marias_wins > bens_wins else 'Ben'
